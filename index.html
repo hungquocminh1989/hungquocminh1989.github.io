@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Title</title>
+    <title>Responsive Page</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -17,6 +17,7 @@
             padding: 5px 10px; /* Giảm kích thước nút */
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease;
+            font-size: 16px;
         }
 
         #pasteButton:hover, #copyButton:hover {
@@ -26,9 +27,32 @@
 
         /* Style cho container chứa nút */
         .button-container {
-            display: inline-flex;
+            display: flex;
             gap: 10px;
             margin-top: 10px;
+            justify-content: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            /* Stack buttons on smaller screens */
+            .button-container {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            /* Increase button size for easier tap on mobile */
+            #pasteButton, #copyButton {
+                padding: 10px;
+                font-size: 18px;
+                width: 100%;
+                text-align: center;
+            }
+
+            /* Optimize output display on mobile */
+            .flex-1 {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -44,7 +68,6 @@
             <button id="copyButton" class="focus:outline-none">Copy GPT Prompt</button>
         </div>
         
-
         <!-- Div to display converted HTML -->
         <div class="flex-1 p-4 border-solid border-2 bg-yellow-50 mt-4 mb-4 hidden">
             <div id="markdownOutput" class="prose"></div>
@@ -122,6 +145,7 @@ Chỉ như vậy thôi. Tôi sẽ bắt đầu đưa ra từ vựng cần học,
             $('#copyButton').on('click', async function() {
                 try {
                     await navigator.clipboard.writeText(predefinedText);
+                    alert("Nội dung đã được copy vào bộ nhớ tạm!");
                 } catch (error) {
                     alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
                 }
