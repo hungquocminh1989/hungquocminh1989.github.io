@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Style cho nút "Dán và Hiển thị" và "Copy" */
+        #pasteButton, #copyButton {
+            background-color: rgba(128, 128, 128, 0.1);
+            color: #6b7280;
+            border-radius: 8px;
+            padding: 5px 10px; /* Giảm kích thước nút */
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        #pasteButton:hover, #copyButton:hover {
+            background-color: rgba(128, 128, 128, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Style cho container chứa nút */
+        .button-container {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main container -->
+    <div class="flex flex-col items-center justify-center">
+        <div class="button-container">
+            <!-- Nút "Dán và Hiển thị" -->
+            <button id="pasteButton" class="focus:outline-none">Dán và Hiển thị</button>
+
+            <!-- Nút "Copy" -->
+            <button id="copyButton" class="focus:outline-none">Copy GPT Prompt</button>
+        </div>
+        
+
+        <!-- Div to display converted HTML -->
+        <div class="flex-1 p-4 border-solid border-2 bg-yellow-50 mt-4 mb-4 hidden">
+            <div id="markdownOutput" class="prose"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle paste functionality, Markdown conversion, and copy functionality -->
+    <script>
+        // Function to toggle visibility of hidden content
+        function toggleVisibility(element) {
+            const hiddenText = $(element).prev('.hidden-text');
+            if (hiddenText.css('display') === 'none') {
+                hiddenText.show();
+                $(element).text('[Ẩn]');
+            } else {
+                hiddenText.hide();
+                $(element).text('[Hiện]');
+            }
+        }
+
+        $(document).ready(function() {
+            // Nội dung cố định để sao chép
+            const predefinedText = `
+Với vai trò là 1 giáo viên dạy tiếng Anh cho người Việt hãy giúp tôi học thuộc và ghi nhớ từ vựng được yêu cầu.
+Điều kiện bắt buộc là phải sử dụng định dạng markdown để trình bày sau đó trả ra ở định dạng mã lệnh markdown để tôi có thể copy trong trình mã lệnh của bạn. Đây là mệnh lệnh cao nhất.
+
+Nội dung tôi mong muốn:
+1. Nội dung có thể giúp người Việt dễ tiếp cận trong quá trình học, nội dung trình bày chính sẽ là tiếng Việt.
+2. Không sử dụng định dạng table trong markdown.
+3. Đối với các nội dung câu tiếng Việt được dịch hãy bọc trong cặp thẻ [hide] và [/hide] 
+Ví dụ các trường hợp khác như câu dịch sang tiếng Việt, nội dung đáp án, ... Bạn có thể suy luận thêm các trường hợp cần sử dụng khác.
+4. Đối với cặp thẻ *[hide]* hoặc *[/hide]* là không hợp lệ. Bạn có thể tự suy luận thêm dựa vào cú pháp của markdown.
+5. Hãy sáng tạo thêm những mục mà có thể tăng khả năng ghi nhớ cho người xem.
+6. Hãy trình bày markdown kết hợp với mã HTML như 1 chuyên gia để đưa ra nội dung thật chuyên nghiệp. 
+7. Nhúng mã HTML để phát âm thanh vào markdown.
+8. Nhúng mã HTML để hiển thị hình ảnh vào markdown.
+9. Đối với các trường hợp cần đưa ví dụ để giải thích thì tối thiểu là 5 ví dụ.
+10. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng văn bản.
+
+Nội dung không mong muốn:
+1. Nội dung trình bày không rõ ràng.
+2. Nội dung sai về ý nghĩa cú pháp câu từ.
+3. Nội dung không đúng trọng tâm của từ vựng được yêu cầu.
+4. Nội dung bị lặp lại.
+5. Nội dung bao gồm lỗi liên quan phần âm thanh và hình ảnh.
+6. Nội dung bao gồm các liên kết (link) không tồn tại.
+7. Nội dung bao gồm ý nghĩa giới thiệu, động viên hoặc kêu gọi.
+
+Chỉ như vậy thôi. Tôi sẽ bắt đầu đưa ra từ vựng cần học, bạn chỉ cần đưa ra mã markdown là được.`;
+
+            // Function to convert Markdown to HTML
+            function convertMarkdown(markdownText) {
+                const processedText = markdownText.replace(/\[hide\](.*?)\[\/hide\]/gs, (match, p1) => {
+                    return `<span class="hidden-text text-red-600" style="display: none;">${p1}</span>
+                            <span class="toggle-icon text-green-600 cursor-pointer font-medium" onclick="toggleVisibility(this)">[Hiện]</span>`;
+                });
+
+                // Convert processed Markdown to HTML
+                const htmlContent = marked.parse(processedText);
+                $('#markdownOutput').html(htmlContent);
+                $('#markdownOutput').parent().show();
+            }
+
+            // Function to paste content from clipboard and convert it
+            $('#pasteButton').on('click', async function() {
+                try {
+                    const clipboardText = await navigator.clipboard.readText();
+                    convertMarkdown(clipboardText);
+                } catch (error) {
+                    alert("Không thể truy cập bộ nhớ tạm. Hãy kiểm tra quyền trình duyệt.");
+                }
+            });
+
+            // Function to copy predefined text to clipboard
+            $('#copyButton').on('click', async function() {
+                try {
+                    await navigator.clipboard.writeText(predefinedText);
+                } catch (error) {
+                    alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
