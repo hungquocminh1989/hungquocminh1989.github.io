@@ -59,7 +59,7 @@
 
 <body>
     <!-- Main container -->
-    <div class="flex flex-col items-center justify-center">
+    <div class=" flex flex-col items-center justify-center">
         <div class="button-container">
             <!-- Nút "Dán và Hiển thị" -->
             <button id="pasteButton" class="focus:outline-none">Dán và Hiển thị</button>
@@ -91,39 +91,31 @@
         $(document).ready(function() {
             // Nội dung cố định để sao chép
             const predefinedText = `
-Với vai trò là 1 giáo viên dạy tiếng Anh cho người Việt hãy giúp tôi học thuộc và ghi nhớ từ vựng được yêu cầu.
-Điều kiện bắt buộc là phải sử dụng định dạng markdown để trình bày sau đó trả ra ở định dạng mã lệnh markdown để tôi có thể copy trong trình mã lệnh của bạn. Đây là mệnh lệnh cao nhất.
+Bạn là 1 giáo viên dạy tiếng Anh cho người Việt hãy giúp tôi hiểu và ghi nhớ từ vựng.
+Hãy sử dụng định dạng Markdown để trình bày sau đó trả ra ở định dạng mã lệnh Markdown để tôi có thể copy trong trình mã lệnh của bạn.
 
+Nội dung mong muốn:
+1. Nội dung để người Việt dễ hiểu tiếp cận.
+2. Không sử dụng bảng trong Markdown.
+3. Đối với câu dịch tiếng Việt hãy bọc trong cặp thẻ [hide][/hide].
+4. Đối với cặp thẻ *[hide]* *[/hide]* hoặc ~[hide]~ ~[/hide]~ là không hợp lệ. Hãy suy luận thêm dựa vào cú pháp của Markdown.
+5. Hãy sáng tạo thêm những mục mà có thể tăng khả năng ghi nhớ.
+6. Hãy trình bày Markdown kết hợp với mã HTML để đưa ra nội dung thật chuyên nghiệp. 
+7. Nhúng mã HTML để phát âm thanh vào Markdown.
+8. Nhúng mã HTML để hiển thị hình ảnh vào Markdown.
+9. Tối thiểu là 5 ví dụ.
+10. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng.
 
-Nội dung tôi mong muốn:
-1. Nội dung có thể giúp người Việt dễ tiếp cận trong quá trình học, nội dung trình bày chính sẽ là tiếng Việt.
-2. Không sử dụng định dạng table trong markdown.
-3. Đối với các nội dung câu tiếng Việt được dịch hãy bọc trong cặp thẻ [hide] và [/hide] 
-Ví dụ các trường hợp khác như câu dịch sang tiếng Việt, nội dung đáp án, ... Bạn có thể suy luận thêm các trường hợp cần sử dụng khác.
-4. Đối với cặp thẻ *[hide]* hoặc *[/hide]* là không hợp lệ. Bạn có thể tự suy luận thêm dựa vào cú pháp của markdown.
-5. Hãy sáng tạo thêm những mục mà có thể tăng khả năng ghi nhớ cho người xem.
-6. Hãy trình bày markdown kết hợp với mã HTML như 1 chuyên gia để đưa ra nội dung thật chuyên nghiệp. 
-7. Nhúng mã HTML để phát âm thanh vào markdown.
-8. Nhúng mã HTML để hiển thị hình ảnh vào markdown.
-9. Đối với các trường hợp cần đưa ví dụ để giải thích thì tối thiểu là 5 ví dụ.
-10. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng văn bản.
-
-
-Nội dung không mong muốn:
+Nội dung KHÔNG mong muốn:
 1. Nội dung trình bày không rõ ràng.
-2. Nội dung sai về ý nghĩa cú pháp câu từ
-.
-3. Nội dung không đúng trọng tâm của từ vựng được yêu cầu.
+2. Nội dung sai về ý nghĩa, cú pháp, câu từ.
+3. Nội dung không đúng trọng tâm được yêu cầu.
 4. Nội dung bị lặp lại.
-5. Nội dung bao gồm lỗi liên quan phần âm thanh và hình ảnh.
-
-6. Nội dung bao gồm các liên kết (link) không tồn tại.
-
+5. Nội dung bao gồm lỗi âm thanh và lỗi hình ảnh.
+6. Nội dung bao gồm liên kết (link) không tồn tại.
 7. Nội dung bao gồm ý nghĩa giới thiệu, động viên hoặc kêu gọi.
 
-
-
-Chỉ như vậy thôi. Tôi sẽ bắt đầu đưa ra từ vựng cần học, bạn chỉ cần đưa ra mã markdown là được.
+Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã markdown.
 `;
 
             // Function to convert Markdown to HTML
