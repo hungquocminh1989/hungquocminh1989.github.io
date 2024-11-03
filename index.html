@@ -145,7 +145,6 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã markdown
             $('#copyButton').on('click', async function() {
                 try {
                     await navigator.clipboard.writeText(predefinedText);
-                    alert("Nội dung đã được copy vào bộ nhớ tạm!");
                 } catch (error) {
                     alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
                 }
