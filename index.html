@@ -135,7 +135,7 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown
                     if (!response.ok) throw new Error("Yêu cầu API thất bại.");
 
                     const data = await response.json();
-                    const markdownOutput = data.choices[0].message.content.replace(/^```markdown\s*|```$/g, '').trim();
+                    const markdownOutput = data.choices[0].message.content.replace(/^```markdown\s*|\n```$/g, '').trim();
 
                     convertMarkdown(markdownOutput);
                 } catch (error) {
