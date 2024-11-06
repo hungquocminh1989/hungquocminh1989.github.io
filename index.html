@@ -14,7 +14,7 @@
     <!-- Main container -->
     <div class="flex flex-col items-center justify-center min-h-screen p-4">
         <!-- Button container (commented out as in original) -->
-        <div class="flex gap-4 mt-4 flex-wrap justify-center">
+        <div class="flex gap-4 mt-4 flex-wrap justify-center hidden">
             <button id="pasteButton" class="bg-gray-100 text-gray-600 rounded-lg px-4 py-2 hover:bg-gray-200 transition-all">
                 Dán và Hiển thị
             </button>
@@ -101,14 +101,6 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown
                 $('#markdownDisplay').removeClass('hidden');
             }
 
-            async function copyText(predefinedText){
-                try {
-                    await navigator.clipboard.writeText(predefinedText);
-                } catch (error) {
-                    alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
-                }
-            }
-
             $('#sendRequestButton').on('click', async function() {
                 const vocabulary = $('#vocabInput').val().trim();
 
@@ -144,7 +136,6 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown
 
                     const data = await response.json();
                     const markdownOutput = data.choices[0].message.content.replace(/^```markdown\s*|```$/g, '').trim();
-                    copyText(markdownOutput);
 
                     convertMarkdown(markdownOutput);
                 } catch (error) {
@@ -168,7 +159,11 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown
 
             // Function to copy predefined text to clipboard
             $('#copyButton').on('click', async function() {
-                copyText(predefinedText);
+                try {
+                    await navigator.clipboard.writeText(predefinedText);
+                } catch (error) {
+                    alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
+                }
             });
         });
     </script>
