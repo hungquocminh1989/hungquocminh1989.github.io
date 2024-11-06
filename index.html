@@ -65,7 +65,7 @@
 
             const predefinedText = `
 Bạn là 1 giáo viên dạy tiếng Anh cho người Việt hãy giúp tôi hiểu và ghi nhớ từ vựng.
-Hãy sử dụng định dạng Markdown để trình bày sau đó trả ra ở định dạng mã lệnh Markdown để tôi có thể copy trong trình mã lệnh của bạn.
+Hãy sử dụng định dạng Markdown để trình bày.
 
 Nội dung mong muốn:
 1. Nội dung để người Việt dễ hiểu tiếp cận.
@@ -73,21 +73,16 @@ Nội dung mong muốn:
 3. Đối với câu dịch tiếng Việt hãy bọc trong cặp thẻ [hide][/hide].
 4. Đối với cặp thẻ *[hide]* *[/hide]* hoặc ~[hide]~ ~[/hide]~ là không hợp lệ. Hãy suy luận thêm dựa vào cú pháp của Markdown.
 5. Hãy sáng tạo thêm những mục mà có thể tăng khả năng ghi nhớ.
-6. Hãy trình bày Markdown kết hợp với mã HTML để đưa ra nội dung thật chuyên nghiệp.
-7. Nhúng mã HTML để phát âm thanh vào Markdown.
-8. Tối thiểu là 5 ví dụ.
-9. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng.
+6. Tối thiểu là 5 ví dụ.
+7. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng.
 
 Nội dung KHÔNG mong muốn:
 1. Nội dung trình bày không rõ ràng.
 2. Nội dung sai về ý nghĩa, cú pháp, câu từ.
 3. Nội dung không đúng trọng tâm được yêu cầu.
 4. Nội dung bị lặp lại.
-5. Nội dung bao gồm lỗi âm thanh và lỗi hình ảnh.
-6. Nội dung bao gồm liên kết (link) không tồn tại.
-7. Nội dung bao gồm ý nghĩa giới thiệu, động viên hoặc kêu gọi.
 
-Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown.
+Bạn chỉ cần đưa ra mã Markdown và không nói gì thêm.
 `;
 
             function convertMarkdown(markdownText) {
@@ -120,7 +115,7 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown
                 $(this).attr('disabled', true);
                 $(this).addClass('opacity-50');  // Thêm hiệu ứng mờ để hiển thị rõ trạng thái vô hiệu hóa
 
-                const prompt = `${predefinedText}\n\nTừ vựng: ${vocabulary}`;
+                const prompt = `${predefinedText}\n\nBắt đầu với từ: ${vocabulary}`;
 
                 try {
                     const response = await fetch("https://api.openai.com/v1/chat/completions", {
