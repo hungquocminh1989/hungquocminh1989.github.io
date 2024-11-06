@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
@@ -8,75 +8,40 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        /* Style cho nút "Dán và Hiển thị" và "Copy" */
-        #pasteButton, #copyButton {
-            background-color: rgba(128, 128, 128, 0.1);
-            color: #6b7280;
-            border-radius: 8px;
-            padding: 5px 10px; /* Giảm kích thước nút */
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            font-size: 16px;
-        }
-
-        #pasteButton:hover, #copyButton:hover {
-            background-color: rgba(128, 128, 128, 0.2);
-            transform: scale(1.05);
-        }
-
-        /* Style cho container chứa nút */
-        .button-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 640px) {
-            /* Stack buttons on smaller screens */
-            .button-container {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            /* Increase button size for easier tap on mobile */
-            #pasteButton, #copyButton {
-                padding: 10px;
-                font-size: 18px;
-                width: 100%;
-                text-align: center;
-            }
-
-            /* Optimize output display on mobile */
-            .flex-1 {
-                padding: 10px;
-            }
-        }
-    </style>
 </head>
 
-<body>
+<body class="bg-gray-100">
     <!-- Main container -->
-    <div class=" flex flex-col items-center justify-center">
-        <div class="button-container">
-            <!-- Nút "Dán và Hiển thị" -->
-            <button id="pasteButton" class="focus:outline-none">Dán và Hiển thị</button>
-
-            <!-- Nút "Copy" -->
-            <button id="copyButton" class="focus:outline-none">Copy GPT Prompt</button>
+    <div class="flex flex-col items-center justify-center min-h-screen p-4">
+        <!-- Button container (commented out as in original) -->
+        <div class="flex gap-4 mt-4 flex-wrap justify-center hidden">
+            <button id="pasteButton" class="bg-gray-100 text-gray-600 rounded-lg px-4 py-2 hover:bg-gray-200 transition-all">
+                Dán và Hiển thị
+            </button>
+            <button id="copyButton" class="bg-gray-100 text-gray-600 rounded-lg px-4 py-2 hover:bg-gray-200 transition-all">
+                Copy GPT Prompt
+            </button>
         </div>
-        
+
+        <!-- Input group for vocabulary search -->
+        <div class="flex flex-col items-center gap-4 mt-4 w-full max-w-xs">
+            <label for="vocabInput" class="text-gray-700 font-medium">Nhập từ vựng cần tra cứu:</label>
+            <input type="text" id="vocabInput" placeholder="Ví dụ: Hello, Hi, Goodbye ..."
+                class="border border-gray-300 p-2 rounded w-full">
+            <button id="sendRequestButton"
+                class="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-all focus:outline-none">
+                Tạo Nội Dung
+            </button>
+        </div>
+
         <!-- Div to display converted HTML -->
-        <div class="flex-1 p-4 border-solid border-2 bg-yellow-50 m-4 hidden">
+        <div id="markdownDisplay" class="flex-1 p-4 border-2 border-yellow-400 bg-yellow-50 m-4 hidden w-full max-w-xl rounded-lg">
             <div id="markdownOutput" class="prose"></div>
         </div>
     </div>
 
-    <!-- JavaScript to handle paste functionality, Markdown conversion, and copy functionality -->
+    <!-- JavaScript to handle Markdown conversion and API integration -->
     <script>
-        // Function to toggle visibility of hidden content
         function toggleVisibility(element) {
             const hiddenText = $(element).prev('.hidden-text');
             if (hiddenText.css('display') === 'none') {
@@ -89,7 +54,15 @@
         }
 
         $(document).ready(function() {
-            // Nội dung cố định để sao chép
+            // Lấy API Key từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const apiKey = urlParams.get('k');
+
+            if (!apiKey) {
+                alert("API Key không được tìm thấy trong URL. Vui lòng kiểm tra lại.");
+                //return;
+            }
+
             const predefinedText = `
 Bạn là 1 giáo viên dạy tiếng Anh cho người Việt hãy giúp tôi hiểu và ghi nhớ từ vựng.
 Hãy sử dụng định dạng Markdown để trình bày sau đó trả ra ở định dạng mã lệnh Markdown để tôi có thể copy trong trình mã lệnh của bạn.
@@ -100,11 +73,10 @@ Nội dung mong muốn:
 3. Đối với câu dịch tiếng Việt hãy bọc trong cặp thẻ [hide][/hide].
 4. Đối với cặp thẻ *[hide]* *[/hide]* hoặc ~[hide]~ ~[/hide]~ là không hợp lệ. Hãy suy luận thêm dựa vào cú pháp của Markdown.
 5. Hãy sáng tạo thêm những mục mà có thể tăng khả năng ghi nhớ.
-6. Hãy trình bày Markdown kết hợp với mã HTML để đưa ra nội dung thật chuyên nghiệp. 
+6. Hãy trình bày Markdown kết hợp với mã HTML để đưa ra nội dung thật chuyên nghiệp.
 7. Nhúng mã HTML để phát âm thanh vào Markdown.
-8. Nhúng mã HTML để hiển thị hình ảnh vào Markdown.
-9. Tối thiểu là 5 ví dụ.
-10. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng.
+8. Tối thiểu là 5 ví dụ.
+9. Thẻ [hide][/hide] chỉ áp dụng trên 1 dòng.
 
 Nội dung KHÔNG mong muốn:
 1. Nội dung trình bày không rõ ràng.
@@ -115,22 +87,75 @@ Nội dung KHÔNG mong muốn:
 6. Nội dung bao gồm liên kết (link) không tồn tại.
 7. Nội dung bao gồm ý nghĩa giới thiệu, động viên hoặc kêu gọi.
 
-Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã markdown.
+Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã Markdown.
 `;
 
-            // Function to convert Markdown to HTML
             function convertMarkdown(markdownText) {
                 const processedText = markdownText.replace(/\[hide\](.*?)\[\/hide\]/gs, (match, p1) => {
                     return `<span class="hidden-text text-red-600" style="display: none;">${p1}</span>
                             <span class="toggle-icon text-green-600 cursor-pointer font-medium" onclick="toggleVisibility(this)">[Hiện]</span>`;
                 });
 
-                // Convert processed Markdown to HTML
                 const htmlContent = marked.parse(processedText);
                 $('#markdownOutput').html(htmlContent);
-                $('#markdownOutput').parent().show();
+                $('#markdownDisplay').removeClass('hidden');
             }
 
+            async function copyText(predefinedText){
+                try {
+                    await navigator.clipboard.writeText(predefinedText);
+                } catch (error) {
+                    alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
+                }
+            }
+
+            $('#sendRequestButton').on('click', async function() {
+                const vocabulary = $('#vocabInput').val().trim();
+
+                if (!vocabulary) {
+                    alert("Hãy nhập từ vựng cần tra cứu.");
+                    return;
+                }
+
+                // Vô hiệu hóa nút để ngăn bấm nhiều lần
+                $(this).attr('disabled', true);
+                $(this).addClass('opacity-50');  // Thêm hiệu ứng mờ để hiển thị rõ trạng thái vô hiệu hóa
+
+                const prompt = `${predefinedText}\n\nTừ vựng: ${vocabulary}`;
+
+                try {
+                    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: "gpt-4o-mini",
+                            messages: [
+                                { role: "user", content: prompt }
+                            ],
+                            max_tokens: 1000,
+                            temperature: 0.7
+                        })
+                    });
+
+                    if (!response.ok) throw new Error("Yêu cầu API thất bại.");
+
+                    const data = await response.json();
+                    const markdownOutput = data.choices[0].message.content.replace(/^```markdown\s*|```$/g, '').trim();
+                    copyText(markdownOutput);
+
+                    convertMarkdown(markdownOutput);
+                } catch (error) {
+                    alert("Có lỗi xảy ra khi gọi API. Vui lòng kiểm tra lại.");
+                    console.error(error);
+                } finally {
+                    // Kích hoạt lại nút sau khi yêu cầu hoàn tất
+                    $(this).removeAttr('disabled');
+                    $(this).removeClass('opacity-50');  // Loại bỏ hiệu ứng mờ
+                }
+            });
             // Function to paste content from clipboard and convert it
             $('#pasteButton').on('click', async function() {
                 try {
@@ -143,11 +168,7 @@ Tôi sẽ đưa từ vựng cần học, bạn chỉ cần đưa ra mã markdown
 
             // Function to copy predefined text to clipboard
             $('#copyButton').on('click', async function() {
-                try {
-                    await navigator.clipboard.writeText(predefinedText);
-                } catch (error) {
-                    alert("Không thể copy nội dung. Hãy kiểm tra quyền trình duyệt.");
-                }
+                copyText(predefinedText);
             });
         });
     </script>
